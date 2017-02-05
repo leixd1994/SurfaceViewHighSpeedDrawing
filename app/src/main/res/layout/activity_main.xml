@@ -7,12 +7,13 @@
 
     tools:context="com.example.leixd.surfaceviewhighspeeddrawing.MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!" />
+
     <com.example.leixd.surfaceviewhighspeeddrawing.MySurfaceView
         android:id="@+id/surfaceview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+    <com.example.leixd.surfaceviewhighspeeddrawing.FrontSurfaceView
+        
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </RelativeLayout>

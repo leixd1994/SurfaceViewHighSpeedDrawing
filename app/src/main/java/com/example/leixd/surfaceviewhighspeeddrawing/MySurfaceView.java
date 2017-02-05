@@ -17,18 +17,18 @@ import android.view.View;
 import android.widget.Toast;
 
 /**
- * Created by 雷晓东 on 17-1-30.
+ * Created by 雷晓东 on 17-1-30.    //此SurfaceView用来绘制背景网格
  */
 
 public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback {
     private SurfaceHolder surfaceHolder;
     private Paint paint,paintGreen;
-    private Path path;
+
     private DisplayMetrics metrics;             //屏幕相关的数据
     private int  TotalPoint=600;                //屏幕绘制的点数
     private float pxBetweenPoint;               //点之间的间隔像素
     private float []TotalPoint2;    
-    private int currentsite=0;                  //当前位置
+
     Bitmap backgroundbitmap;             //背景Bitmap
     private Canvas canvas,surfacecanvas;
 
