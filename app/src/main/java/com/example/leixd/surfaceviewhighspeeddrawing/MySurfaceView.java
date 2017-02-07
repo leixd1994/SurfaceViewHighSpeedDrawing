@@ -25,8 +25,8 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
     private Paint paint,paintGreen;
 
     private DisplayMetrics metrics;             //屏幕相关的数据
-    private int  TotalPoint=600;                //屏幕绘制的点数
-    private float pxBetweenPoint;               //点之间的间隔像素
+
+
     private float []TotalPoint2;    
 
     Bitmap backgroundbitmap;             //背景Bitmap
@@ -47,7 +47,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         paintGreen=new Paint();
         paintGreen.setColor(Color.GREEN);
         this.metrics=metrics;
-        TotalPoint2=new float[TotalPoint];
+
 
 
     }
@@ -66,11 +66,8 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
 
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
-        backgroundbitmap=Bitmap.createBitmap(this.getWidth(),this.getHeight(), Bitmap.Config.ARGB_8888);
-        for (int t=0;t<600;t++)
-        {
-            TotalPoint2[t]=124;
-        }
+        backgroundbitmap=Bitmap.createBitmap(this.getWidth(),this.getHeight(), Bitmap.Config.ARGB_8888);  //建立内存中的Bitmap，先将背景绘制到内存中，再一次性绘制到屏幕上，提高效率。
+
 
         canvas=new Canvas();
         canvas.setBitmap(backgroundbitmap);
@@ -89,11 +86,10 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
             drawy=drawy+test;
         }
         surfacecanvas=surfaceHolder.lockCanvas();
-        surfacecanvas.drawBitmap(backgroundbitmap,0,0,paint);
+        surfacecanvas.drawBitmap(backgroundbitmap,0,0,paint);    //将内存中的图像绘制到屏幕上
         surfaceHolder.unlockCanvasAndPost(surfacecanvas);
 
-        //以下为绘制心电图部分//////
-        pxBetweenPoint=(float)canvas.getWidth()/TotalPoint;     //初始化点之间的间隔
+
     }
 
     @Override

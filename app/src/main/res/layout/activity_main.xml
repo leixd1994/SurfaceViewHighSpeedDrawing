@@ -7,13 +7,14 @@
 
     tools:context="com.example.leixd.surfaceviewhighspeeddrawing.MainActivity">
 
-
+    <com.example.leixd.surfaceviewhighspeeddrawing.FrontSurfaceView
+        android:id="@+id/frontview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
     <com.example.leixd.surfaceviewhighspeeddrawing.MySurfaceView
         android:id="@+id/surfaceview"
+        android:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-    <com.example.leixd.surfaceviewhighspeeddrawing.FrontSurfaceView
-        
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+
 </RelativeLayout>

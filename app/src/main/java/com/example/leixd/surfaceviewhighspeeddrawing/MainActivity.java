@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 
 public class MainActivity extends AppCompatActivity {
-
+private FrontSurfaceView frontSurfaceView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -18,52 +18,32 @@ public class MainActivity extends AppCompatActivity {
 
 
         final MySurfaceView mySurfaceView = (MySurfaceView)findViewById(R.id.surfaceview);
+
+        frontSurfaceView=(FrontSurfaceView)findViewById(R.id.frontview) ;
         mySurfaceView.init(metrics,800,800);
         mySurfaceView.setLineSize(5);              //设置线宽
-//        final Handler handler=new Handler(){
-//            @Override
-//            public void handleMessage(Message msg) {
-//
-//                switch (msg.what)
-//                {
-//                    case 1:
-//                        float []t=new float[5];
-//                        for (int t0=0;t0<5;t0++)
-//                        {
-//                            t[t0]=114;
-//
-//                        }
-//                        mySurfaceView.update(t)
-//                        ;break;
-//                    case 2:
-//                        float []t3=new float[5];
-//                        for (int t0=0;t0<5;t0++)
-//                        {
-//                            t3[t0]=414;
-//
-//                        }
-//                        mySurfaceView.update(t3)
-//                        ;break;
-//
-//                }
-//
-//                super.handleMessage(msg);
-//            }
-//        };
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                while (true) {
-//                    handler.sendEmptyMessage(1);
-//                    try {
-//                        Thread.sleep(200);
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
-//                    handler.sendEmptyMessage(2);
-//                }
-//            }
-//        }).start();
+     new Thread(new Runnable() {              //启动新线程等待FrontSurfaceView创建完毕后，向其发送update指令。
+         @Override
+         public void run() {
+             while (frontSurfaceView.isCreated==false) {
+                 try {
+                     Thread.sleep(100);
+                 } catch (InterruptedException e) {
+                     e.printStackTrace();
+                 }
+             }
+
+             int []t=new int[20];
+             for (int i=0;i<20;i++)
+             {t[i]=200;}
+             int []t2=new int[20];
+             for (int i=0;i<20;i++)
+             {t2[i]=400;}
+
+             frontSurfaceView.update(t);
+        //    frontSurfaceView.update(t2);
+         }
+     }).start();
 
 
     }
