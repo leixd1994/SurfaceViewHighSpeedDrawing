@@ -35,28 +35,34 @@ private FrontSurfaceView frontSurfaceView;
                  }
              }
 
-             int []t=new int[20];
-             for (int i=0;i<20;i++)
-             {t[i]=200;}
-             int []t2=new int[20];
-             for (int i=0;i<20;i++)
-             {t2[i]=400;}
-             int []t3=new int[20];
-             for (int i=0;i<20;i++)
-             {t3[i]=600;}
-             frontSurfaceView.update(t);
-             try {
-                 Thread.sleep(1000);
-             } catch (InterruptedException e) {
-                 e.printStackTrace();
+                 frontSurfaceView.setStartX(20);
+             while (true) {
+                 int[] t = new int[20];
+                 for (int i = 0; i < 20; i++) {
+                     t[i] = 200 + i;
+                 }
+                 int[] t2 = new int[20];
+                 for (int i = 0; i < 20; i++) {
+                     t2[i] = 400 + i;
+                 }
+                 int[] t3 = new int[20];
+                 for (int i = 0; i < 20; i++) {
+                     t3[i] = 600 + i;
+                 }
+                 frontSurfaceView.update(t);
+                 try {
+                     Thread.sleep(1000);
+                 } catch (InterruptedException e) {
+                     e.printStackTrace();
+                 }
+                 frontSurfaceView.update(t2);
+                 try {
+                     Thread.sleep(1000);
+                 } catch (InterruptedException e) {
+                     e.printStackTrace();
+                 }
+                 frontSurfaceView.update(t3);
              }
-             frontSurfaceView.update(t2);
-             try {
-                 Thread.sleep(1000);
-             } catch (InterruptedException e) {
-                 e.printStackTrace();
-             }
-             frontSurfaceView.update(t3);
          }
      }).start();
 

@@ -30,7 +30,7 @@ public class FrontSurfaceView extends SurfaceView implements SurfaceHolder.Callb
     private int surfacewidth,surfaceHeight;    //绘图控件的宽度和高度
     private boolean isUpdateing=false;         //表示是否正在更新线程
     private ArrayDeque arrayDeque;            //表示需要绘制但尚未绘制的点队列
-    private int linewight;                //绿线粗度
+    private int linewight=8;                //绿线粗度
     FrontSurfaceView(Context context, AttributeSet attributeSet)
     {
         super(context,attributeSet);
@@ -38,7 +38,7 @@ public class FrontSurfaceView extends SurfaceView implements SurfaceHolder.Callb
         surfaceHolder.addCallback(this);
        paint=new Paint();
         paint.setColor(Color.GREEN);
-        paint.setStrokeWidth(8);      //绿线粗度
+        paint.setStrokeWidth(linewight);      //绿线粗度
         paint.setAntiAlias(true);
         arrayDeque=new ArrayDeque();   //初始化ArrayDeque 队列
     }
@@ -63,6 +63,16 @@ public class FrontSurfaceView extends SurfaceView implements SurfaceHolder.Callb
 
     }
 
+    public void setLineWight(int t)             //设置绿线粗细
+    {
+        linewight=t;
+
+            }
+    public void setStartX(int t)       //设置起始点坐标
+    {
+        currentx=t;
+
+    }
 public  void  update(final int []point)                 //更新图像函数
 {
     int pointnumber = point.length;
@@ -70,6 +80,7 @@ public  void  update(final int []point)                 //更新图像函数
     canvas = surfaceHolder.lockCanvas(new Rect(drawx, 0, drawx + pointnumber * pxBetweenPoint, surfaceHeight));
     for (int t:point)
     {
+        if (drawx>325) {drawx=0;currentx=0;  surfaceHolder.unlockCanvasAndPost(canvas);canvas = surfaceHolder.lockCanvas(new Rect(drawx, 0, drawx + pointnumber * pxBetweenPoint, surfaceHeight));}
         canvas.drawLine(drawx,lastdrawy,drawx+pxBetweenPoint,t,paint);
         drawx=drawx+pxBetweenPoint;
         lastdrawy=t;
@@ -97,6 +108,7 @@ public  void  update(final int []point)                 //更新图像函数
 
         while (arrayDeque.peek()!=null){
             int t=(int)arrayDeque.poll();
+
             canvas.drawLine(drawx, lastdrawy, drawx + pxBetweenPoint, t, paint);
             drawx = drawx + pxBetweenPoint;
             lastdrawy =t ;
