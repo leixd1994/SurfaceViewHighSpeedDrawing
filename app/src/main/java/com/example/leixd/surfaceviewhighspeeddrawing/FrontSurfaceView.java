@@ -64,10 +64,8 @@ public class FrontSurfaceView extends SurfaceView implements SurfaceHolder.Callb
 public  void  update(final int []point)
 {
 
-    new Thread(new Runnable() {                   //开启新线程，避免阻塞主线程，让界面流畅。
-        @Override
-        public void  run() {
-synchronized (arrayDeque) {                        //锁定arrayDeque队列，保证线程安全
+
+//synchronized (arrayDeque) {                        //锁定arrayDeque队列，保证线程安全
     for (int t:point)
     {
         arrayDeque.offer(t);
@@ -83,14 +81,13 @@ synchronized (arrayDeque) {                        //锁定arrayDeque队列，�
         lastdrawy =t ;
     }
     currentx = currentx + point.length;
-
+//Log.e("Thread Name",Thread.currentThread().getName());
     surfaceHolder.unlockCanvasAndPost(canvas);
     isUpdateing = false;
 
 
-}
-        }
-    }).start();
+//}
+
 
 }
 
