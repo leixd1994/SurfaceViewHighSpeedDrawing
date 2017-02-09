@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
+import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.os.CpuUsageInfo;
 import android.util.AttributeSet;
@@ -24,6 +25,7 @@ public class FrontSurfaceView extends SurfaceView implements SurfaceHolder.Callb
     private Paint paint;
     private int pxBetweenPoint;               //点之间的间隔像素
     private int TotalPoint=600;   // 默认一个屏幕显示的点数
+    private int Startx=0;           //起始点坐标
     int currentx=0;//绘图时的x坐标
     int lastdrawy=0;// 上次的y坐标
     public boolean isCreated=false;     //外部借口，判断控件是否已经创建完毕。
@@ -70,17 +72,25 @@ public class FrontSurfaceView extends SurfaceView implements SurfaceHolder.Callb
             }
     public void setStartX(int t)       //设置起始点坐标
     {
-        currentx=t;
+        Startx=t;
+        currentx=Startx;
 
     }
 public  void  update(final int []point)                 //更新图像函数
 {
     int pointnumber = point.length;
+
     int drawx = currentx*pxBetweenPoint;
     canvas = surfaceHolder.lockCanvas(new Rect(drawx, 0, drawx + pointnumber * pxBetweenPoint, surfaceHeight));
+    canvas.drawColor(Color.WHITE);               //清空画布
+    canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.SRC);
+
     for (int t:point)
     {
-        if (drawx>325) {drawx=0;currentx=0;  surfaceHolder.unlockCanvasAndPost(canvas);canvas = surfaceHolder.lockCanvas(new Rect(drawx, 0, drawx + pointnumber * pxBetweenPoint, surfaceHeight));}
+
+        if (drawx>1920) {currentx=Startx;drawx=currentx*pxBetweenPoint;  surfaceHolder.unlockCanvasAndPost(canvas);canvas = surfaceHolder.lockCanvas(new Rect(drawx, 0, drawx + pointnumber * pxBetweenPoint, surfaceHeight));canvas.drawColor(Color.WHITE);
+            canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.SRC);   //清空画布
+        }
         canvas.drawLine(drawx,lastdrawy,drawx+pxBetweenPoint,t,paint);
         drawx=drawx+pxBetweenPoint;
         lastdrawy=t;

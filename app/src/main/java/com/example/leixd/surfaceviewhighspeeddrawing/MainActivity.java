@@ -29,39 +29,22 @@ private FrontSurfaceView frontSurfaceView;
          public void run() {
              while (frontSurfaceView.isCreated==false) {
                  try {
-                     Thread.sleep(100);
+                     Thread.sleep(10);
                  } catch (InterruptedException e) {
                      e.printStackTrace();
                  }
              }
-
+double i=1;
                  frontSurfaceView.setStartX(20);
              while (true) {
-                 int[] t = new int[20];
-                 for (int i = 0; i < 20; i++) {
-                     t[i] = 200 + i;
+
+                 int []point=new int[10];
+                 for (int i2=0;i<10;i++) {
+                     point[i2]=(int) (Math.sin(Math.toRadians(i)) * 300) + 300;
+                     i = i + 1;
                  }
-                 int[] t2 = new int[20];
-                 for (int i = 0; i < 20; i++) {
-                     t2[i] = 400 + i;
-                 }
-                 int[] t3 = new int[20];
-                 for (int i = 0; i < 20; i++) {
-                     t3[i] = 600 + i;
-                 }
-                 frontSurfaceView.update(t);
-                 try {
-                     Thread.sleep(1000);
-                 } catch (InterruptedException e) {
-                     e.printStackTrace();
-                 }
-                 frontSurfaceView.update(t2);
-                 try {
-                     Thread.sleep(1000);
-                 } catch (InterruptedException e) {
-                     e.printStackTrace();
-                 }
-                 frontSurfaceView.update(t3);
+                 frontSurfaceView.update(point);
+
              }
          }
      }).start();
