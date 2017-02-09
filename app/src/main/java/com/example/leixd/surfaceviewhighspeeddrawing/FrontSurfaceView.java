@@ -12,6 +12,8 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import java.util.ArrayDeque;
+
 /**
  * Created by leixd on 17-2-5.   //此类为划绿线线函数
  */
@@ -26,6 +28,8 @@ public class FrontSurfaceView extends SurfaceView implements SurfaceHolder.Callb
     int lastdrawy=0;// 上次的y坐标
     public boolean isCreated=false;     //外部借口，判断控件是否已经创建完毕。
     private int surfacewidth,surfaceHeight;    //绘图控件的宽度和高度
+    private boolean isUpdateing=false;         //表示是否正在更新线程
+    private ArrayDeque arrayDeque;            //表示需要绘制但尚未绘制的点队列
     FrontSurfaceView(Context context, AttributeSet attributeSet)
     {
         super(context,attributeSet);
@@ -34,6 +38,8 @@ public class FrontSurfaceView extends SurfaceView implements SurfaceHolder.Callb
        paint=new Paint();
         paint.setColor(Color.GREEN);
         paint.setStrokeWidth(8);      //绿线粗度
+        paint.setAntiAlias(true);
+        arrayDeque=new ArrayDeque();   //初始化ArrayDeque 队列
     }
     @Override
     public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
@@ -55,27 +61,38 @@ public class FrontSurfaceView extends SurfaceView implements SurfaceHolder.Callb
     public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
 
     }
-public void update(final int []point)
+public  void  update(final int []point)
 {
 
     new Thread(new Runnable() {                   //开启新线程，避免阻塞主线程，让界面流畅。
         @Override
-        public void run() {
-            currentx=currentx+point.length;
-            int pointnumber=point.length;
-            int drawx=currentx;
-            canvas=surfaceHolder.lockCanvas(new Rect(drawx,0,drawx+pointnumber*pxBetweenPoint,surfaceHeight));
-           for (int t:point)
-           {
-               Log.e("Tag",""+t);
-               canvas.drawLine(drawx,lastdrawy,drawx+pxBetweenPoint,t,paint);
-               drawx=drawx+pxBetweenPoint;
-               lastdrawy=t;
-           }
-            surfaceHolder.unlockCanvasAndPost(canvas);
+        public void  run() {
+synchronized (arrayDeque) {                        //锁定arrayDeque队列，保证线程安全
+    for (int t:point)
+    {
+        arrayDeque.offer(t);
+    }
+    int pointnumber = point.length;
+    int drawx = currentx*pxBetweenPoint;
+    canvas = surfaceHolder.lockCanvas(new Rect(drawx, 0, drawx + pointnumber * pxBetweenPoint, surfaceHeight));
+
+    while (arrayDeque.peek()!=null){
+   int t=(int)arrayDeque.poll();
+        canvas.drawLine(drawx, lastdrawy, drawx + pxBetweenPoint, t, paint);
+        drawx = drawx + pxBetweenPoint;
+        lastdrawy =t ;
+    }
+    currentx = currentx + point.length;
+
+    surfaceHolder.unlockCanvasAndPost(canvas);
+    isUpdateing = false;
+
+
+}
         }
     }).start();
 
 }
+
 
 }

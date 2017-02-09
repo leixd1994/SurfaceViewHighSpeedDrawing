@@ -39,9 +39,13 @@ private FrontSurfaceView frontSurfaceView;
              int []t2=new int[20];
              for (int i=0;i<20;i++)
              {t2[i]=400;}
-
+             int []t3=new int[20];
+             for (int i=0;i<20;i++)
+             {t3[i]=600;}
              frontSurfaceView.update(t);
-        //    frontSurfaceView.update(t2);
+
+              frontSurfaceView.update(t2);
+             frontSurfaceView.update(t3);
          }
      }).start();
 
