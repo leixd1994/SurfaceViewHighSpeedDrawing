@@ -45,8 +45,17 @@ private FrontSurfaceView frontSurfaceView;
              for (int i=0;i<20;i++)
              {t3[i]=600;}
              frontSurfaceView.update(t);
-
-              frontSurfaceView.update(t2);
+             try {
+                 Thread.sleep(1000);
+             } catch (InterruptedException e) {
+                 e.printStackTrace();
+             }
+             frontSurfaceView.update(t2);
+             try {
+                 Thread.sleep(1000);
+             } catch (InterruptedException e) {
+                 e.printStackTrace();
+             }
              frontSurfaceView.update(t3);
          }
      }).start();
