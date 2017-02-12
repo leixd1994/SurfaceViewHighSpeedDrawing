@@ -4,9 +4,11 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
+import android.graphics.Xfermode;
 import android.os.CpuUsageInfo;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -32,8 +34,9 @@ public class FrontSurfaceView extends SurfaceView implements SurfaceHolder.Callb
     private int surfacewidth,surfaceHeight;    //绘图控件的宽度和高度
     private boolean isUpdateing=false;         //表示是否正在更新线程
     private ArrayDeque arrayDeque;            //表示需要绘制但尚未绘制的点队列
-    private int linewight=8;                //绿线粗度
-    FrontSurfaceView(Context context, AttributeSet attributeSet)
+    private int linewight=68;                //绿线粗度
+    private Path lastpath;                  //上次的Path
+    public FrontSurfaceView(Context context, AttributeSet attributeSet)
     {
         super(context,attributeSet);
         surfaceHolder=getHolder();
@@ -41,8 +44,12 @@ public class FrontSurfaceView extends SurfaceView implements SurfaceHolder.Callb
        paint=new Paint();
         paint.setColor(Color.GREEN);
         paint.setStrokeWidth(linewight);      //绿线粗度
-        paint.setAntiAlias(true);
-        arrayDeque=new ArrayDeque();   //初始化ArrayDeque 队列
+       // paint.setAntiAlias(true);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeCap(Paint.Cap.SQUARE);
+
+
+        arrayDeque=new ArrayDeque();   //初始化ArrayDeque 队列   存放上一次的数据点
     }
     @Override
     public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
@@ -78,23 +85,44 @@ public class FrontSurfaceView extends SurfaceView implements SurfaceHolder.Callb
     }
 public  void  update(final int []point)                 //更新图像函数
 {
-    int pointnumber = point.length;
+    Path path=new Path();
 
+
+
+
+    int pointnumber = point.length;
+    int drawxlast;         //代表重绘上次内容的x坐标
     int drawx = currentx*pxBetweenPoint;
+    drawxlast=(currentx-arrayDeque.size())*pxBetweenPoint;
     canvas = surfaceHolder.lockCanvas(new Rect(drawx, 0, drawx + pointnumber * pxBetweenPoint, surfaceHeight));
     canvas.drawColor(Color.WHITE);               //清空画布
     canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.SRC);
+path.moveTo(drawx,point[0]);
+
+
 
     for (int t:point)
     {
 
+
         if (drawx>1920) {currentx=Startx;drawx=currentx*pxBetweenPoint;  surfaceHolder.unlockCanvasAndPost(canvas);canvas = surfaceHolder.lockCanvas(new Rect(drawx, 0, drawx + pointnumber * pxBetweenPoint, surfaceHeight));canvas.drawColor(Color.WHITE);
             canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.SRC);   //清空画布
         }
-        canvas.drawLine(drawx,lastdrawy,drawx+pxBetweenPoint,t,paint);
+       // canvas.drawLine(drawx,lastdrawy,drawx+pxBetweenPoint,t,paint);
+        path.lineTo(drawx+pxBetweenPoint,t);
+
         drawx=drawx+pxBetweenPoint;
         lastdrawy=t;
     }
+    Path drawpath=new Path();       //绘图时使用的Path
+
+   if (lastpath!=null) drawpath.addPath(lastpath);
+drawpath.addPath(path);
+
+    lastpath=path;
+
+
+    canvas.drawPath(drawpath,paint);
     currentx = currentx + point.length;
 //Log.e("Thread Name",Thread.currentThread().getName());
     surfaceHolder.unlockCanvasAndPost(canvas);

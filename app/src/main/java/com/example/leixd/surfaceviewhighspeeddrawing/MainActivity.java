@@ -38,8 +38,8 @@ double i=1;
                  frontSurfaceView.setStartX(20);
              while (true) {
 
-                 int []point=new int[10];
-                 for (int i2=0;i<10;i++) {
+                 int []point=new int[20];
+                 for (int i2=0;i2<20;i2++) {
                      point[i2]=(int) (Math.sin(Math.toRadians(i)) * 300) + 300;
                      i = i + 1;
                  }
